@@ -8,7 +8,6 @@ struct Clients {
 };
 
 struct Clients *clients;
-void add_client_to_linked_list(struct Clients **client, struct Clients *new);
 struct Clients *create_client(struct Clients temp_client);
 void delete_list();
 void insert_client_into_linked_list(struct Clients temp_client);

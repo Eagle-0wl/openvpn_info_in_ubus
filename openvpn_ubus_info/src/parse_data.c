@@ -82,7 +82,8 @@ static int parse_message(char *message)
 
     if(message_beginning == NULL || message_end == NULL)
             return 2;
-    client_info  = (char*) malloc ( ((strlen(message)-293)*sizeof(char)) * (clients_count)); //we will be removing -294 character +1 character for \0 
+     client_info  = (char*) malloc (4000);
+    //client_info  = (char*) malloc (((strlen(message)-290)*sizeof(char)) * (clients_count)); //we will be removing -294 character +1 character for \0 
     if(client_info == NULL)
             return 3;
 

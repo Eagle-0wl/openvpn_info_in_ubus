@@ -7,14 +7,10 @@
 #include "parse_data.h"
 #include "linked_list.h"
 
-/**
- * get information about connected clients
- */
 
 static int get_clients(struct ubus_context *ctx, struct ubus_object *obj,
 		      struct ubus_request_data *req, const char *method,
 		      struct blob_attr *msg);
-
 
 static struct uloop_timeout event_timer;
 static struct ubus_context *ctx;
