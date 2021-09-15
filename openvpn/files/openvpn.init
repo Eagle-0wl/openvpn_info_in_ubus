@@ -339,6 +339,7 @@ start_instance() {
 			add_authentication_to_config "$s" "$OPENVPN_CONFIG"
 		fi
 		append UCI_STARTED "$config" "$LIST_SEP"
+		echo -e "management /var/run/openvpn.$s.sock unix\n" >> "$OPENVPN_CONFIG"
 		echo -e "\nstatus /var/openvpn-status_$s.log" >>"$OPENVPN_CONFIG"
 		openvpn_add_instance "$s" "${config%/*}" "$config"
 		start_ubus $config $s
@@ -347,7 +348,7 @@ start_instance() {
 
 	[ ! -d "/var/etc" ] && mkdir -p "/var/etc"
 	[ -f "/var/etc/openvpn-$s.conf" ] && rm "/var/etc/openvpn-$s.conf"
-
+	echo -e "management /var/run/openvpn.$s.sock unix\n" >> "$OPENVPN_CONFIG"
 	append_bools "$s" $OPENVPN_BOOLS
 	append_params "$s" $OPENVPN_PARAMS
 	append_list "$s" $OPENVPN_LIST
