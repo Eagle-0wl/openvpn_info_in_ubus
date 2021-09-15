@@ -33,6 +33,7 @@ static void line_split_into_parts(char *string, int mode)
     char *token = NULL;
     char *rest = NULL;
     int counter = 0;
+    struct Clients *new_client;
     struct Clients temp_client;
     strcpy(temp_string, string);
 
@@ -52,14 +53,8 @@ static void line_split_into_parts(char *string, int mode)
                     strcpy(temp_client.date, token); 
             counter++;  
     }
-    if (mode == 0) {
-        if (check_if_not_exist(temp_client) != 0) {
-                insert_client_into_linked_list(temp_client);
-                
-        }
-        }else {
-             update_client_info(temp_client);
-        }
+    new_client = create_client(temp_client);
+    push_client(&clients, new_client);
 }
 
 
@@ -88,20 +83,7 @@ int check_if_not_exist(struct Clients temp_client)
 
 
 
-//updates client info
-int update_client_info(struct Clients temp_client)
-{
-    struct Clients *point_to_first = NULL; 
-    point_to_first = clients;
-    while (point_to_first != NULL) {
-        if (strcmp(temp_client.address, point_to_first->address) == 0) {
-                strcpy(point_to_first->bytes_received, temp_client.bytes_received);
-                strcpy(point_to_first->bytes_sent, temp_client.bytes_sent);
-                break;
-        }
-        point_to_first = point_to_first->next;
-    }
-}
+
 //counts clients from the response message.
 static int client_count(char *string)
 {
@@ -127,14 +109,15 @@ static int parse_message(char *message)
     static int prev_clients_count = 0;
     
     clients_count = client_count(message);
-    if (clients_count == 0) {
-            if (clients != NULL) {
-                    delete_list();
-                    clients = NULL;
-            }
-            prev_clients_count = 0;
-            return 1;
-    }
+    // if (clients_count == 0) {
+    //         if (clients != NULL) {
+    //                 delete_list();
+    //                 clients = NULL;
+    //         }
+    //         prev_clients_count = 0;
+    //         return 1;
+    // }
+    delete_list();
     message_beginning = strstr(message, "Since\r\n")+7;
     message_end = strstr(message, "ROUTING TABLE\r\n");
 
@@ -168,32 +151,25 @@ int gather_status()
     char *received_message;
     int len = 0;
     int rc = 0; //return code
-printf  ("1");
     receve_data_from_server(1); //catch unwanted server responses
-printf  ("2");
     send_message = (char *) malloc(sizeof("status\n"));
     strcpy(send_message, "status\n");
     len = strlen(send_message);
-printf  ("3");
     if (send_message == NULL){
         syslog(LOG_ERR, "Failed to allocate memmory for message");
         return 3;
     }
-    printf ("4");
     send_managment_command(send_message, &len);
-printf  ("5");
     received_message = receve_data_from_server(0);
     if (received_message == NULL) {
             rc = 4;
             syslog(LOG_ERR, "Failed to allocate memmory for receve message");
             goto cleanup_1;
-    }printf  ("6");
+    }
         
     rc = parse_message(received_message);
-printf  ("7");
     free(received_message);
     cleanup_1:
             free(send_message);
-    printf ("8");
     return rc;
 }

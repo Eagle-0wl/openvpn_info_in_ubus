@@ -8,12 +8,12 @@
 
 #include "ubus.h"
 
-#define SERVER_PATH "/var/run/openvpn.sock"
+//#define SERVER_PATH "/var/run/openvpn.sock"
 #define CLIENT_PATH "/var/run/managment_client.sock"
 #define DATA_SIZE 4000
 static int unix_socket;
 
-int connect_unix_socket()
+int connect_unix_socket(char *server_path)
 {
     int rc, len;
     struct sockaddr_un server_sockaddr;
@@ -43,7 +43,7 @@ int connect_unix_socket()
 
     // Set up the UNIX sockaddr structure for the server socket and connect to it.
     server_sockaddr.sun_family = AF_UNIX;
-    strcpy(server_sockaddr.sun_path, SERVER_PATH);
+    strcpy(server_sockaddr.sun_path, server_path);
     rc = connect(unix_socket, (struct sockaddr *)&server_sockaddr, len);
     if (rc == -1){
         syslog(LOG_ERR, "Failed to connect");

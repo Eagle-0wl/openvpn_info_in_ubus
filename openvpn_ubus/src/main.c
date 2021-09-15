@@ -14,7 +14,7 @@ int main(int argc , char *argv[])
     if (rc != 0)
     return 1;
 
-    rc = connect_unix_socket();
+    rc = connect_unix_socket(server_settings.server_path);
     if (rc == 1)
             return 2;
 
@@ -36,6 +36,7 @@ static int check_arguments(int argc , char *argv[])
     }
     if (argc >= 2) {
         sprintf(server_settings.name, "openvpn.%s", argv[1]);
+        sprintf(server_settings.server_path, argv[2]);
     }
     return 0;
 }
