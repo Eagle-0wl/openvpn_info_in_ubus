@@ -104,12 +104,12 @@ static void event_handler(struct uloop_timeout *timeout)
     if (check_socket_connection_status() != 0)
             end_ubus();       
     gather_status();
-    uloop_timeout_set(&event_timer, 400);
+    uloop_timeout_set(&event_timer, 2000);
 }
 
 static void set_event(void)
 {
     event_timer.cb = event_handler;
-    uloop_timeout_set(&event_timer, 0);
+    uloop_timeout_set(&event_timer, 2000);
 }
 
